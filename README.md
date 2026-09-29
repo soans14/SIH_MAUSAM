@@ -1,12 +1,12 @@
 # 🌦️ MAUSAM - AI-Powered Personalized Mobile Application Homepage
 ### *Smart India Hackathon (SIH) Prototype*
-**Teammates:
-Harsh Mishra
-Harsha Soans
-Soham Shingade
-Harsh Sawant
-Mrunmayee Joshi
-Gaurang Gohil**
+**Teammates:**
+- **Harsh Mishra**
+- **Harsha Soans**
+- **Soham Shingade**
+- **Harsh Sawant**
+- **Mrunmayee Joshi**
+- **Gaurang Gohil**
 
 ---
 
