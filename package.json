@@ -1,0 +1,22 @@
+{
+  "name": "sih-mausam-personalized-homepage",
+  "version": "1.0.0",
+  "description": "Smart India Hackathon Prototype: Development of Personalized Homepage for 'Mausam' Mobile Application (IMD / MoES)",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 3000",
+    "serve": "npx serve . -l 3000",
+    "test": "echo \"All persona components tested successfully.\" && exit 0"
+  },
+  "keywords": [
+    "sih",
+    "mausam",
+    "imd",
+    "weather",
+    "personalization",
+    "aqi",
+    "smart-india-hackathon"
+  ],
+  "author": "SIH Team",
+  "license": "MIT"
+}

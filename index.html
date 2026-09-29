@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mausam - AI-Powered Personalized Weather Platform (IMD / MoES)</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
+
+  <!-- TOP APP CONTROLS / TOOLBAR FOR DEMO & EVALUATION -->
+  <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3 shadow-xs">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Brand & SIH Badge -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20 font-black text-xl">
+            M
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span id="appHeaderTitle" class="font-extrabold text-base tracking-tight text-slate-900 dark:text-white">MAUSAM</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 dark:bg-orange-950 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800">
+                IMD • MoES
+              </span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                SIH PROTOTYPE
+              </span>
+            </div>
+            <p id="appHeaderSub" class="text-xs text-slate-500 dark:text-slate-400">
+              India Meteorological Department • Personalized Mobile Experience
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick City Switcher -->
+      <div class="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs overflow-x-auto">
+        <span class="text-[11px] font-bold text-slate-400 px-2">City:</span>
+        <button data-city-switch="delhi" class="px-2.5 py-1 rounded-lg font-medium hover:bg-white dark:hover:bg-slate-700 transition">Delhi</button>
+        <button data-city-switch="mumbai" class="px-2.5 py-1 rounded-lg font-medium hover:bg-white dark:hover:bg-slate-700 transition">Mumbai</button>
+        <button data-city-switch="bengaluru" class="px-2.5 py-1 rounded-lg font-medium hover:bg-white dark:hover:bg-slate-700 transition">Bengaluru</button>
+        <button data-city-switch="shimla" class="px-2.5 py-1 rounded-lg font-medium hover:bg-white dark:hover:bg-slate-700 transition">Shimla</button>
+        <button data-city-switch="goa" class="px-2.5 py-1 rounded-lg font-medium hover:bg-white dark:hover:bg-slate-700 transition">Goa</button>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-2">
+        <!-- Severe Weather Simulation Button -->
+        <button id="simulateAlertBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-800 hover:bg-rose-100 transition shadow-xs" title="Simulate Emergency IMD Red Alert">
+          <span>🚨</span>
+          <span class="hidden sm:inline">Simulate Red Alert</span>
+        </button>
+
+        <!-- View Switcher (Mobile Mockup vs Full Desktop) -->
+        <div class="flex bg-slate-200 dark:bg-slate-800 p-0.5 rounded-xl text-xs">
+          <button id="btnMobileView" class="px-2.5 py-1 rounded-lg font-semibold bg-sky-500 text-white transition flex items-center gap-1">
+            <span>📱</span> Mobile
+          </button>
+          <button id="btnDesktopView" class="px-2.5 py-1 rounded-lg font-semibold text-slate-600 dark:text-slate-300 transition flex items-center gap-1">
+            <span>🖥️</span> Responsive
+          </button>
+        </div>
+
+        <!-- Language Switcher -->
+        <button id="langToggleBtn" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 transition shadow-xs">
+          हिन्दी
+        </button>
+
+        <!-- Dark/Light Mode -->
+        <button id="themeToggleBtn" class="p-2 rounded-xl text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 transition shadow-xs" title="Toggle Theme">
+          🌙
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER: Center container with phone frame or responsive desktop -->
+  <main id="appViewContainer" class="py-6 px-3 flex justify-center items-start">
+    
+    <!-- MOBILE CHASSIS SIMULATOR -->
+    <div id="mobileChassis" class="mobile-device-chassis relative shadow-2xl transition-all">
+      
+      <!-- Top Dynamic Notch & Status Bar -->
+      <div id="deviceNotch" class="device-notch">
+        <div class="device-speaker"></div>
+        <div class="device-camera"></div>
+      </div>
+
+      <!-- Mobile Top Bar (Time, Wifi, Battery) -->
+      <div class="pt-2 px-6 pb-1 flex justify-between items-center text-[11px] font-bold text-slate-800 dark:text-slate-200 select-none z-30">
+        <span>09:41</span>
+        <div class="flex items-center gap-1.5 opacity-80">
+          <span>5G</span>
+          <span>📶</span>
+          <span>100% 🔋</span>
+        </div>
+      </div>
+
+      <!-- APP CONTENT SCROLLER -->
+      <div class="flex-1 overflow-y-auto px-4 py-3 custom-scrollbar space-y-4">
+        
+        <!-- Search & Location Quick Bar -->
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+          <input 
+            type="text" 
+            id="citySearchInput"
+            placeholder="Search city, district, or pin code..." 
+            class="w-full pl-9 pr-10 py-2.5 rounded-2xl bg-white/80 dark:bg-slate-800/80 backdrop-blur border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-xs transition"
+          >
+          <button id="openAiChatBtn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sky-500 hover:text-sky-600 transition" title="Ask Mausam Mitra AI">
+            <span class="text-base">✨</span>
+          </button>
+        </div>
+
+        <!-- HERO WEATHER CARD (Live Weather + IMD Alert Banner) -->
+        <div id="heroWeatherCard">
+          <!-- Dynamically populated by app.js -->
+        </div>
+
+        <!-- 8 PERSONA CHIPS SELECTOR -->
+        <div id="personaChipsContainer" class="pt-1">
+          <!-- Dynamically populated with 8 persona toggle chips -->
+        </div>
+
+        <!-- DYNAMIC PERSONALIZED FEED -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between px-1">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+              <span>🎯</span>
+              <span>Your Personalized Mausam Stream</span>
+            </h2>
+            <span class="text-[11px] text-sky-600 dark:text-sky-400 font-medium">Smart AI Ranked</span>
+          </div>
+
+          <div id="personalizedFeedContainer" class="space-y-4">
+            <!-- Dynamically populated cards for active personas -->
+          </div>
+        </div>
+
+        <!-- Bottom Padding for mobile navigation bar -->
+        <div class="h-14"></div>
+      </div>
+
+      <!-- MOBILE BOTTOM NAVIGATION DOCK -->
+      <nav class="absolute bottom-0 inset-x-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 py-2 px-6 flex justify-between items-center z-30 shadow-lg">
+        <button class="flex flex-col items-center text-sky-600 dark:text-sky-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          <span class="text-[10px] font-bold mt-0.5">Home</span>
+        </button>
+        <button class="flex flex-col items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span class="text-[10px] font-medium mt-0.5">Radar</span>
+        </button>
+        <button onclick="window.mausamApp.toggleAiChat(true)" class="flex flex-col items-center -mt-5">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-sky-500/40 border-2 border-white dark:border-slate-900 transition hover:scale-105">
+            <span class="text-xl">✨</span>
+          </div>
+          <span class="text-[10px] font-bold text-sky-600 dark:text-sky-400 mt-1">Mitra AI</span>
+        </button>
+        <button class="flex flex-col items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          <span class="text-[10px] font-medium mt-0.5">Alerts</span>
+        </button>
+        <button class="flex flex-col items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3" stroke-width="2"/></svg>
+          <span class="text-[10px] font-medium mt-0.5">Settings</span>
+        </button>
+      </nav>
+
+    </div>
+  </main>
+
+  <!-- AI MAUSAM MITRA MODAL / CHAT DRAWER -->
+  <div id="aiChatDrawer" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-xs items-end sm:items-center justify-center p-3">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col max-h-[85vh] overflow-hidden animate-in fade-in duration-200">
+      
+      <!-- Chat Header -->
+      <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-sky-50 dark:bg-slate-800/60">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 text-white flex items-center justify-center font-bold text-base shadow">
+            ✨
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
+              <span>Mausam Mitra AI</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 font-semibold">Active</span>
+            </h3>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">Personalized Meteorological Advisor</p>
+          </div>
+        </div>
+        <button id="closeAiChatBtn" class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-300 transition text-sm">
+          ✕
+        </button>
+      </div>
+
+      <!-- Quick Persona Prompt Suggestions -->
+      <div class="px-4 py-2.5 bg-slate-50 dark:bg-slate-800/30 border-b border-slate-200 dark:border-slate-800 overflow-x-auto flex gap-2 custom-scrollbar">
+        <button onclick="window.mausamApp.handleAiUserMessage('Can I go jogging tomorrow morning at 6 AM?')" class="text-[11px] whitespace-nowrap px-3 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-sky-500 transition">
+          🏃 Jogging at 6 AM?
+        </button>
+        <button onclick="window.mausamApp.handleAiUserMessage('Is today safe for swimming at the beach?')" class="text-[11px] whitespace-nowrap px-3 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-sky-500 transition">
+          🌊 Beach & wave safety?
+        </button>
+        <button onclick="window.mausamApp.handleAiUserMessage('Will fog disrupt my morning commute?')" class="text-[11px] whitespace-nowrap px-3 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-sky-500 transition">
+          🌫️ Highway fog check?
+        </button>
+        <button onclick="window.mausamApp.handleAiUserMessage('Should I irrigate crops or spray pesticide?')" class="text-[11px] whitespace-nowrap px-3 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-sky-500 transition">
+          🌾 Agromet crop advice?
+        </button>
+        <button onclick="window.mausamApp.handleAiUserMessage('Outdoor wedding suitability tonight?')" class="text-[11px] whitespace-nowrap px-3 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-sky-500 transition">
+          💍 Evening wedding weather?
+        </button>
+      </div>
+
+      <!-- Messages Body -->
+      <div id="aiChatMessages" class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3 min-h-[260px] max-h-[380px]">
+        <div class="flex justify-start">
+          <div class="bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 text-xs rounded-2xl rounded-tl-none px-3.5 py-2.5 max-w-[85%] border border-slate-200 dark:border-slate-700 leading-relaxed shadow-xs">
+            👋 Namaste! I am <b>Mausam Mitra</b>, your personalized weather assistant. Ask me anything tailored to your daily routine, workouts, travel, farming, beach visits, or school commutes!
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Bar -->
+      <div class="p-3 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex gap-2">
+        <input 
+          type="text" 
+          id="aiUserInput"
+          placeholder="Ask a question about weather & your plans..." 
+          class="flex-1 px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
+        >
+        <button id="sendAiMsgBtn" class="px-4 py-2.5 rounded-2xl bg-sky-600 text-white text-xs font-bold hover:bg-sky-700 transition flex items-center gap-1 shadow-md shadow-sky-600/20">
+          <span>Send</span>
+          <span>➤</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="assets/icons.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/translations.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

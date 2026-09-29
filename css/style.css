@@ -1,0 +1,146 @@
+/* Custom styles and animations for Mausam Personalized Homepage */
+
+:root {
+  --primary-gradient: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  --imd-saffron: #f97316;
+  --imd-green: #10b981;
+  --imd-blue: #0284c7;
+}
+
+/* Glassmorphism Card Style */
+.card-weather {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-weather:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -5px rgba(0, 0, 0, 0.1), 0 10px 15px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* IMD Warning Banner Pulsing */
+@keyframes alertPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.88;
+    transform: scale(1.004);
+  }
+}
+
+.imd-alert-pulse {
+  animation: alertPulse 2.8s infinite ease-in-out;
+}
+
+/* Device Frame Simulator */
+.mobile-frame-container {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-device-chassis {
+  width: 412px;
+  min-height: 860px;
+  max-height: 90vh;
+  border-radius: 46px;
+  border: 12px solid #1e293b;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.45), 0 0 0 2px #334155;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+}
+
+.dark .mobile-device-chassis {
+  background: #090d16;
+  border-color: #0f172a;
+  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.8), 0 0 0 2px #1e293b;
+}
+
+/* Dynamic Island / Notch */
+.device-notch {
+  width: 120px;
+  height: 28px;
+  background-color: #0f172a;
+  border-radius: 0 0 18px 18px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.device-camera {
+  width: 10px;
+  height: 10px;
+  background-color: #020617;
+  border-radius: 50%;
+  border: 1.5px solid #1e293b;
+}
+
+.device-speaker {
+  width: 36px;
+  height: 4px;
+  background-color: #1e293b;
+  border-radius: 2px;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.6);
+}
+
+/* Persona Chip selection animation */
+.persona-chip {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.persona-chip:hover {
+  transform: translateY(-1.5px);
+}
+
+.persona-chip.active {
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.15);
+}
+
+/* Background Weather Ambiance Gradient */
+.weather-bg-haze {
+  background: radial-gradient(circle at top right, rgba(254, 215, 170, 0.35), transparent 70%),
+              radial-gradient(circle at top left, rgba(226, 232, 240, 0.5), transparent 50%);
+}
+
+.weather-bg-clear {
+  background: radial-gradient(circle at top right, rgba(186, 230, 253, 0.4), transparent 70%),
+              radial-gradient(circle at top left, rgba(254, 240, 138, 0.3), transparent 60%);
+}
+
+.weather-bg-rain {
+  background: radial-gradient(circle at top right, rgba(191, 219, 254, 0.45), transparent 70%),
+              radial-gradient(circle at top left, rgba(148, 163, 184, 0.3), transparent 60%);
+}
+
+/* AI Chat Drawer Animation */
+.ai-modal {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
