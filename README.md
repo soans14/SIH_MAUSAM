@@ -1,6 +1,12 @@
 # 🌦️ MAUSAM - AI-Powered Personalized Mobile Application Homepage
 ### *Smart India Hackathon (SIH) Prototype*
-**Official Application of India Meteorological Department (IMD) • Ministry of Earth Sciences (MoES), Govt. of India**
+**Teammates:
+Harsh Mishra
+Harsha Soans
+Soham Shingade
+Harsh Sawant
+Mrunmayee Joshi
+Gaurang Gohil**
 
 ---
 
